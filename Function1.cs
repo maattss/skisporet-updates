@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -17,10 +18,10 @@ namespace SkisporetUpdates
             //logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
 
             var destinationResponse = await FetchDestinationDataAsync();
-            Console.WriteLine(destinationResponse.Content);
+            Console.WriteLine(destinationResponse.Data.Symbols[0].Name);
 
             var sandenTrackResponse = await FetchTrackDataAsync();
-            Console.WriteLine(sandenTrackResponse.Content);
+            Console.WriteLine(sandenTrackResponse.Data[0].LineId);
 
         }
 
@@ -35,7 +36,7 @@ namespace SkisporetUpdates
             return await client.ExecuteAsync<DestinationData>(request);
         }
 
-        private static async Task<IRestResponse<TrackData>> FetchTrackDataAsync()
+        private static async Task<IRestResponse<List<TrackData>>> FetchTrackDataAsync()
         {
             // var sandenBody = @"trackTypeKey=ts2sWithStatuses&ids=%5B24046%5D"; // ID:24046
             // var husmorLoypaBody = @"trackTypeKey=ts2sWithStatuses&ids=%5B39808%5D"; // ID:39808
@@ -50,7 +51,7 @@ namespace SkisporetUpdates
             request.AddHeader("X-Requested-With", "XMLHttpRequest");
             var sandenBody = @"trackTypeKey=ts2sWithStatuses&ids=%5B24046%5D";
             request.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", sandenBody, ParameterType.RequestBody);
-            return await client.ExecuteAsync<TrackData>(request);
+            return await client.ExecuteAsync<List<TrackData>>(request);
         }
     }
 }
