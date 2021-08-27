@@ -1,6 +1,6 @@
 # Skisporet Updates
 
-![Deployment status](https://github.com/maattss/skisporet-updates/actions/workflows/main.yml/badge.svg)
+![Deployment status](https://github.com/maattss/skisporet-updates/actions/workflows/build-and-deploy.yml/badge.svg)
 
 Simple Azure Function written in C#, fetching ski track status for certain pre-defined location. When the track status is updated notification emails are sent to all subscribers.
  
