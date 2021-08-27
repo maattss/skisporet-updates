@@ -61,14 +61,24 @@ namespace SkisporetUpdates
         private static async Task<IDictionary<string, TrackData>> FetchTrackDataListAsync()
         {
             var trackDataList = new Dictionary<string, TrackData>();
-            var sandenRespons = FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B24046%5D");
-            var husmorLoypaRespons = FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B39808%5D");
-            var ornehommenResponse = FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B24039%5D");
-            var knaben1Response = FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B39801%5D");
-            var knabeRoisaResponse = FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B49990%5D");
-            var kvinavegenResponse = FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B45635%5D");
 
-            // TODO: Insert responses to map
+            var sandenResponse = await FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B24046%5D");
+            trackDataList.Add("Sanden", sandenResponse.Data[0]);
+
+            var husmorLoypaResponse = await FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B39808%5D");
+            trackDataList.Add("HusmorLoypa", husmorLoypaResponse.Data[0]);
+
+            var ornehommenResponse = await FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B24039%5D");
+            trackDataList.Add("Ornehommen", ornehommenResponse.Data[0]);
+
+            var knaben1Response = await FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B39801%5D");
+            trackDataList.Add("Knaben1", knaben1Response.Data[0]);
+
+            var knaberoisaResponse = await FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B49990%5D");
+            trackDataList.Add("Knaberoisa", knaberoisaResponse.Data[0]);
+
+            var kvinavegenResponse = await FetchTrackDataAsync(@"trackTypeKey=ts2sWithStatuses&ids=%5B45635%5D");
+            trackDataList.Add("Kvinavegen", kvinavegenResponse.Data[0]);
 
             return trackDataList;
         }
