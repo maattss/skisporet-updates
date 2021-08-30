@@ -14,12 +14,14 @@ namespace SkisporetUpdates
     {
         [Function("CheckStatus")]
         [TableOutput("SkisporetStatus")]
-        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
+        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer, 
+            [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput, 
+            FunctionContext context)
         {
             // [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
-            // logger.LogInformation("Table input: " + tableInput.RowKey);
+            logger.LogInformation("Table input: " + tableInput.RowKey);
 
             /*var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
