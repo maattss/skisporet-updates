@@ -15,19 +15,19 @@ namespace SkisporetUpdates
         [Function("CheckStatus")]
         [TableOutput("SkisporetStatus")]
         public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer, 
-            [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput, 
+            [TableInput("SkisporetStatus", "KnabenDestination")] string tableInput, 
             FunctionContext context)
         {
             // [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
-            logger.LogInformation("Table input: " + tableInput.RowKey);
+            logger.LogInformation("Table input: " + tableInput);
 
             /*var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
             if (!(DateTime.Now > start && DateTime.Now < end))
             {
-                if (DateTime.Now.Hour == 12)
+                if (DateTime.Now.Hour == 12 && DateTime.Now.Minutes == 0)
                 {
                     logger.LogInformation($"Daily off season update at: {DateTime.Now}");
                 } 
