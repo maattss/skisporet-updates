@@ -13,7 +13,7 @@ namespace SkisporetUpdates
     public static class CheckStatus
     {
         [Function("CheckStatus")]
-        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
+        public static async Task RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
         {
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
