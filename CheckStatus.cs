@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using RestSharp;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using SkisporetUpdates.Models;
 
 namespace SkisporetUpdates
@@ -36,7 +38,10 @@ namespace SkisporetUpdates
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
             logger.LogInformation("Destination response: ", destinationResponse.Data.Symbols[0]);
 
-            if(status.PrepStatus != 1 && currentPrepStatus == 1)
+            var response = SendMail();
+            logger.LogInformation("Destination response: ", destinationResponse.Data.Symbols[0]);
+
+            if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
                 // SendMail
             }
@@ -97,6 +102,20 @@ namespace SkisporetUpdates
             trackDataList.Add("Kvinavegen", kvinavegenResponse.Data[0]);
 
             return trackDataList;
+        }
+
+        public static async Task<Response> SendMail()
+        {
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("test@example.com", "Example User");
+            var subject = "Sending with Twilio SendGrid is Fun";
+            var to = new EmailAddress("ma.tyldum@gmail.com", "Mats");
+            var plainTextContent = "and easy to do anywhere, even with C#";
+            var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg).ConfigureAwait(false);
+            return response;
         }
     }
 }
