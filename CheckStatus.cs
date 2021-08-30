@@ -35,11 +35,12 @@ namespace SkisporetUpdates
             
             var destinationResponse = await FetchDestinationDataAsync();
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
-            logger.LogInformation("Destination response: ", currentPrepStatus);
+            logger.LogInformation("Current prep status: ", currentPrepStatus);
 
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-            logger.LogInformation("API key: ", apiKey);
+            logger.LogInformation("API key: " + apiKey);
             var response = SendMail();
+            logger.LogInformation("Mail response: " + response.ToString());
 
             /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
