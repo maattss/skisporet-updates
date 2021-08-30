@@ -15,7 +15,7 @@ namespace SkisporetUpdates
         [Function("CheckStatus")]
         [TableOutput("SkisporetStatus")]
         public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer, 
-            [TableInput("SkisporetStatus", "KnabenDestination")] string tableInput, 
+            [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput, 
             FunctionContext context)
         {
             // [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput
