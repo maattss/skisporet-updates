@@ -13,11 +13,12 @@ namespace SkisporetUpdates
     public static class CheckStatus
     {
         [Function("CheckStatus")]
-        [TableOutput("OutputTable")]
-        public static async Task<MyTableData> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
+        [TableOutput("SkisporetStatus")]
+        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context, [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput)
         {
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
+            logger.LogInformation("Table input: " + tableInput.RowKey);
 
             /*var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
@@ -33,16 +34,16 @@ namespace SkisporetUpdates
                     return null;
                 }
             }*/
-            
+
             var destinationResponse = await FetchDestinationDataAsync();
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
             logger.LogInformation("Current prep status: " + currentPrepStatus);
 
-            return new MyTableData()
+            return new TrackStatus()
             {
-                PartitionKey = "queue",
+                PartitionKey = "DestinationKnaben",
                 RowKey = Guid.NewGuid().ToString(),
-                Text = $"Output record with rowkey {currentPrepStatus} created at {DateTime.Now}"
+                PrepStatus = currentPrepStatus
             };
 
             /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
@@ -122,11 +123,11 @@ namespace SkisporetUpdates
             return response;
         }
 
-        public class MyTableData
+        public class TrackStatus
         {
             public string PartitionKey { get; set; }
             public string RowKey { get; set; }
-            public string Text { get; set; }
+            public int PrepStatus { get; set; }
         }
     }
 }
