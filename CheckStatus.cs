@@ -12,12 +12,12 @@ namespace SkisporetUpdates
     {
         [Function("CheckStatus")]
         [TableOutput("TrackStatus", Connection = "AzureWebJobsStorage")]
-        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context, [TableInput("TrackStatus", "KnabenDestination")] TrackStatus status, SendGridOutputAttribute)
+        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context, [TableInput("TrackStatus", "KnabenDestination")] TrackStatus status)
         {
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
 
-            var start = new DateTime(2021, 12, 01);
+            /*var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
             if (!(DateTime.Now > start && DateTime.Now < end))
             {
@@ -30,7 +30,7 @@ namespace SkisporetUpdates
                     logger.LogInformation($"Season not started, returning...");
                     return null;
                 }
-            }
+            }*/
             
             var destinationResponse = await FetchDestinationDataAsync();
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
