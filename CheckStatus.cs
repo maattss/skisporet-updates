@@ -15,13 +15,11 @@ namespace SkisporetUpdates
         [Function("CheckStatus")]
         [TableOutput("SkisporetStatus")]
         public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer,
-            [TableInput("SkisporetStatus", "DestinationKnaben", "01b428ee-03ad-4afe-bfe7-0d5a050ce8dc")] TrackStatus tableInput,
+            [TableInput("SkisporetStatus", "DestinationKnaben")] List<TrackStatus> tableInput,
             FunctionContext context)
         {
-            // [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput
-            // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
-            logger.LogInformation("Table input: " + tableInput.RowKey);
+            logger.LogInformation("Table input: " + tableInput[0].PrepStatus);
 
             /*var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
