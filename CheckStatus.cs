@@ -34,8 +34,8 @@ namespace SkisporetUpdates
             var destinationResponse = await FetchDestinationDataAsync();
             logger.LogInformation(destinationResponse.Data.Symbols[0].Name);
 
-            var trackResponse = await FetchTrackDataListAsync();
-            logger.LogInformation("Track response", trackResponse);
+            //var trackResponse = await FetchTrackDataListAsync();
+            //logger.LogInformation("Track response", trackResponse);
 
             // TODO: Save status to database
 
