@@ -39,9 +39,9 @@ namespace SkisporetUpdates
 
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             logger.LogInformation("API key: " + apiKey);
-            var response = SendMail();
-            logger.LogInformation("Mail response body: " + response.Result.Body);
-            logger.LogInformation("Mail response statuscode: " + response.Result.StatusCode);
+            // var response = SendMail();
+            // logger.LogInformation("Mail response body: " + response.Result.Body);
+            // logger.LogInformation("Mail response statuscode: " + response.Result.StatusCode);
 
             /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
@@ -111,8 +111,8 @@ namespace SkisporetUpdates
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("knaben.loypekjoring@gmail.com", "Knaben Loypekjoring");
+            var to = new EmailAddress("ma.tyldum@gmail.com", "Mats");
             var subject = "Sending with Twilio SendGrid is Fun";
-            var to = new EmailAddress("knaben.loypekjoring@gmail.com", "Knaben Loypekjoring");
             var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
