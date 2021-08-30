@@ -110,9 +110,9 @@ namespace SkisporetUpdates
         {
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("test@example.com", "Example User");
+            var from = new EmailAddress("knaben.loypekjoring@gmail.com", "Knaben Loypekjoring");
             var subject = "Sending with Twilio SendGrid is Fun";
-            var to = new EmailAddress("ma.tyldum@gmail.com", "Mats");
+            var to = new EmailAddress("knaben.loypekjoring@gmail.com", "Knaben Loypekjoring");
             var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
