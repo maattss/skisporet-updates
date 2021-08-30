@@ -21,7 +21,7 @@ namespace SkisporetUpdates
             // [TableInput("SkisporetStatus", "KnabenDestination")] TrackStatus tableInput
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
-            logger.LogInformation("Table input: " + tableInput);
+            logger.LogInformation("Table input: " + tableInput.RowKey);
 
             /*var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
