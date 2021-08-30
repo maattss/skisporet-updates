@@ -35,26 +35,21 @@ namespace SkisporetUpdates
             
             var destinationResponse = await FetchDestinationDataAsync();
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
-            logger.LogInformation("Current prep status: ", currentPrepStatus);
+            logger.LogInformation("Current prep status: " + currentPrepStatus);
 
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-            logger.LogInformation("API key: " + apiKey);
-            // var response = SendMail();
-            // logger.LogInformation("Mail response body: " + response.Result.Body);
-            // logger.LogInformation("Mail response statuscode: " + response.Result.StatusCode);
 
             /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
-                // SendMail
+                // var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+                // var response = SendMail();
+                // logger.LogInformation("Mail statuscode: " + response.Result.StatusCode);
+
             }*/
 
             // var trackResponse = await FetchTrackDataListAsync();
             // logger.LogInformation("Track response", trackResponse);
 
             // TODO: Save status to database
-
-            // TODO: Send mail if status changes (use send grid?)
-            // Figure out logic of when to send mail
 
             //return new TrackStatus { PartitionKey = "KnabenDestination", RowKey = Guid.NewGuid().ToString(), PrepStatus = destinationResponse.Data.Symbols[0].PrepStatus };
 
