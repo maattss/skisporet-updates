@@ -13,7 +13,8 @@ namespace SkisporetUpdates
     public static class CheckStatus
     {
         [Function("CheckStatus")]
-        public static async Task RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
+        [TableOutput("OutputTable")]
+        public static async Task<MyTableData> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
         {
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
@@ -37,11 +38,17 @@ namespace SkisporetUpdates
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
             logger.LogInformation("Current prep status: " + currentPrepStatus);
 
+            return new MyTableData()
+            {
+                PartitionKey = "queue",
+                RowKey = Guid.NewGuid().ToString(),
+                Text = $"Output record with rowkey {currentPrepStatus} created at {DateTime.Now}"
+            };
 
             /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
                 // var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-                // var response = SendMail();
+                // var response = SendGroomingUpdateMail();
                 // logger.LogInformation("Mail statuscode: " + response.Result.StatusCode);
 
             }*/
@@ -101,18 +108,25 @@ namespace SkisporetUpdates
             return trackDataList;
         }
 
-        public static async Task<Response> SendMail()
+        public static async Task<Response> SendGroomingStartedMail()
         {
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("knaben.loypekjoring@gmail.com", "Knaben Loypekjoring");
             var to = new EmailAddress("ma.tyldum@gmail.com", "Mats");
-            var subject = "Sending with Twilio SendGrid is Fun";
-            var plainTextContent = "and easy to do anywhere, even with C#";
-            var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+            var subject = "Skisporet oppdatering!";
+            var plainTextContent = "Woho! Løypemaskinen er i gang. Sjekk status på skisporet.no";
+            var htmlContent = "<p>Woho! Løypemaskinen er i gang. Sjekk status på skisporet.no <a href=\"https://www.skisporet.no\">skisporet.no</a> </p>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
             return response;
+        }
+
+        public class MyTableData
+        {
+            public string PartitionKey { get; set; }
+            public string RowKey { get; set; }
+            public string Text { get; set; }
         }
     }
 }
