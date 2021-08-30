@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SkisporetUpdates.Models
+﻿namespace SkisporetUpdates.Models
 {
-    class TrackStatus
+    ¨public class TrackStatus
     {
         public string PartitionKey { get; set; }
         public string RowKey { get; set; }

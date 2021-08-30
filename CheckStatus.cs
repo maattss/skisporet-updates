@@ -11,7 +11,8 @@ namespace SkisporetUpdates
     public static class CheckStatus
     {
         [Function("CheckStatus")]
-        public static async Task RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
+        [TableOutput("TrackStatus", Connection = "AzureWebJobsStorage")]
+        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context, [TableInput("TrackStatus", "KnabenDestination")] TrackStatus status, SendGridOutputAttribute)
         {
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
@@ -27,20 +28,28 @@ namespace SkisporetUpdates
                 else
                 {
                     logger.LogInformation($"Season not started, returning...");
-                    return;
+                    return null;
                 }
             }
-
+            
             var destinationResponse = await FetchDestinationDataAsync();
-            logger.LogInformation(destinationResponse.Data.Symbols[0].Name);
+            var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
+            logger.LogInformation("Destination response: ", destinationResponse.Data.Symbols[0]);
 
-            //var trackResponse = await FetchTrackDataListAsync();
-            //logger.LogInformation("Track response", trackResponse);
+            if(status.PrepStatus != 1 && currentPrepStatus == 1)
+            {
+                // SendMail
+            }
+
+            // var trackResponse = await FetchTrackDataListAsync();
+            // logger.LogInformation("Track response", trackResponse);
 
             // TODO: Save status to database
 
             // TODO: Send mail if status changes (use send grid?)
             // Figure out logic of when to send mail
+
+            return new TrackStatus { PartitionKey = "KnabenDestination", RowKey = Guid.NewGuid().ToString(), PrepStatus = destinationResponse.Data.Symbols[0].PrepStatus };
 
         }
 
