@@ -40,7 +40,8 @@ namespace SkisporetUpdates
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             logger.LogInformation("API key: " + apiKey);
             var response = SendMail();
-            logger.LogInformation("Mail response: " + response.Result.StatusCode);
+            logger.LogInformation("Mail response body: " + response.Result.Body);
+            logger.LogInformation("Mail response statuscode: " + response.Result.StatusCode);
 
             /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
