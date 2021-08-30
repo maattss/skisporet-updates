@@ -13,8 +13,7 @@ namespace SkisporetUpdates
     public static class CheckStatus
     {
         [Function("CheckStatus")]
-        [TableOutput("TrackStatus", Connection = "AzureWebJobsStorage")]
-        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context, [TableInput("TrackStatus", "KnabenDestination")] TrackStatus status)
+        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
         {
             // TODO: Update ChronJob expression to "* */10 * * * *"
             var logger = context.GetLogger("CheckStatus");
@@ -36,15 +35,16 @@ namespace SkisporetUpdates
             
             var destinationResponse = await FetchDestinationDataAsync();
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
-            logger.LogInformation("Destination response: ", destinationResponse.Data.Symbols[0]);
+            logger.LogInformation("Destination response: ", currentPrepStatus);
 
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            logger.LogInformation("API key: ", apiKey);
             var response = SendMail();
-            logger.LogInformation("Destination response: ", destinationResponse.Data.Symbols[0]);
 
-            if (status.PrepStatus != 1 && currentPrepStatus == 1)
+            /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
                 // SendMail
-            }
+            }*/
 
             // var trackResponse = await FetchTrackDataListAsync();
             // logger.LogInformation("Track response", trackResponse);
@@ -54,7 +54,7 @@ namespace SkisporetUpdates
             // TODO: Send mail if status changes (use send grid?)
             // Figure out logic of when to send mail
 
-            return new TrackStatus { PartitionKey = "KnabenDestination", RowKey = Guid.NewGuid().ToString(), PrepStatus = destinationResponse.Data.Symbols[0].PrepStatus };
+            //return new TrackStatus { PartitionKey = "KnabenDestination", RowKey = Guid.NewGuid().ToString(), PrepStatus = destinationResponse.Data.Symbols[0].PrepStatus };
 
         }
 
