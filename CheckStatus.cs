@@ -13,22 +13,29 @@ namespace SkisporetUpdates
         [Function("CheckStatus")]
         public static async Task RunAsync([TimerTrigger("*/10 * * * * *")] FunctionContext context)
         {
-            // TODO:
-            // Check if between 1. Decemeber and 1. May - Check status for every run
-            // If not, only check status from if time is between 12.00.00 - 12.00.10 
+            // TODO: Update ChronJob expression to "* */10 * * * *"
+            var logger = context.GetLogger("CheckStatus");
 
-            // TODO: Add logging
-            //var logger = context.GetLogger("Function1");
-            //logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            //logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
+            var start = new DateTime(2021, 12, 01);
+            var end = new DateTime(2022, 05, 01);
+            if (!(DateTime.Now > start && DateTime.Now < end))
+            {
+                if (DateTime.Now.Hour == 12)
+                {
+                    logger.LogInformation($"Daily off season update at: {DateTime.Now}");
+                } 
+                else
+                {
+                    logger.LogInformation($"Season not started, returning...");
+                    return;
+                }
+            }
 
             var destinationResponse = await FetchDestinationDataAsync();
-            Console.WriteLine(destinationResponse.Data.Symbols[0].Name);
+            logger.LogInformation(destinationResponse.Data.Symbols[0].Name);
 
             var trackResponse = await FetchTrackDataListAsync();
-            // Console.WriteLine(trackResponse);
-
-            // TODO: Fetch status from all track
+            logger.LogInformation("Track response", trackResponse);
 
             // TODO: Save status to database
 
