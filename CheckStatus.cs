@@ -19,26 +19,36 @@ namespace SkisporetUpdates
             FunctionContext context)
         {
             var logger = context.GetLogger("CheckStatus");
-            logger.LogInformation("Table input: " + tableInput[0].PrepStatus);
+            var previousStatus = tableInput[tableInput.Count - 1].PrepStatus;
+            
 
-            /*var start = new DateTime(2021, 12, 01);
+            var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
             if (!(DateTime.Now > start && DateTime.Now < end))
             {
-                if (DateTime.Now.Hour == 12 && DateTime.Now.Minutes == 0)
+                if (DateTime.Now.Hour == 12 && DateTime.Now.Minute == 0)
                 {
                     logger.LogInformation($"Daily off season update at: {DateTime.Now}");
-                } 
+                }
                 else
                 {
                     logger.LogInformation($"Season not started, returning...");
                     return null;
                 }
-            }*/
+            }
 
             var destinationResponse = await FetchDestinationDataAsync();
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
             logger.LogInformation("Current prep status: " + currentPrepStatus);
+            logger.LogInformation("Previous prep status: " + previousStatus);
+            
+            if (currentPrepStatus == 1 && previousStatus != 1)
+            {
+                var response = SendTrackUpdateMail();
+                var mailSentStatus = response.Result.StatusCode;
+                logger.LogInformation("Mail statuscode: " + mailSentStatus);
+               // TODO: Check foo wrong status code. If so, do not write to db
+            }
 
             return new TrackStatus()
             {
@@ -46,22 +56,6 @@ namespace SkisporetUpdates
                 RowKey = Guid.NewGuid().ToString(),
                 PrepStatus = currentPrepStatus
             };
-
-            /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
-            {
-                // var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-                // var response = SendGroomingUpdateMail();
-                // logger.LogInformation("Mail statuscode: " + response.Result.StatusCode);
-
-            }*/
-
-            // var trackResponse = await FetchTrackDataListAsync();
-            // logger.LogInformation("Track response", trackResponse);
-
-            // TODO: Save status to database
-
-            //return new TrackStatus { PartitionKey = "KnabenDestination", RowKey = Guid.NewGuid().ToString(), PrepStatus = destinationResponse.Data.Symbols[0].PrepStatus };
-
         }
 
         private static async Task<IRestResponse<DestinationData>> FetchDestinationDataAsync()
@@ -110,7 +104,7 @@ namespace SkisporetUpdates
             return trackDataList;
         }
 
-        public static async Task<Response> SendGroomingStartedMail()
+        public static async Task<Response> SendTrackUpdateMail()
         {
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
