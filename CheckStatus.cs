@@ -40,7 +40,7 @@ namespace SkisporetUpdates
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             logger.LogInformation("API key: " + apiKey);
             var response = SendMail();
-            logger.LogInformation("Mail response: " + response.ToString());
+            logger.LogInformation("Mail response: " + response.Result.StatusCode());
 
             /*if (status.PrepStatus != 1 && currentPrepStatus == 1)
             {
@@ -115,7 +115,7 @@ namespace SkisporetUpdates
             var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            var response = await client.SendEmailAsync(msg).ConfigureAwait(false);
+            var response = await client.SendEmailAsync(msg);
             return response;
         }
     }
