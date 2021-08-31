@@ -20,7 +20,7 @@ namespace SkisporetUpdates
             var logger = context.GetLogger("CheckOverallStatus");
             var previousStatus = tableInput[^1].PrepStatus;
 
-            if (!(FetchStatus.ShouldFetchNewData())) return null;
+            if (!(FetchStatus.ShouldFetchNewData(logger))) return null;
 
             logger.LogInformation("Fetching new ski track data...");
             var destinationResponse = await FetchStatus.FetchDestinationDataAsync();
