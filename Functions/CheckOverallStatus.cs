@@ -5,32 +5,26 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using SkisporetUpdates.Helpers;
+using SkisporetUpdates.Models;
 
 namespace SkisporetUpdates
 {
-    public static class CheckStatus
+    public static class CheckOverallStatus
     {
-        public class TrackStatus
-        {
-            public string PartitionKey { get; set; }
-            public string RowKey { get; set; }
-            public int PrepStatus { get; set; }
-        }
-
-        [Function("CheckStatus")]
+        [Function("CheckOverallStatus")]
         [TableOutput("SkisporetStatus")]
         public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer,
             [TableInput("SkisporetStatus", "DestinationKnaben")] List<TrackStatus> tableInput,
             FunctionContext context)
         {
-            var logger = context.GetLogger("CheckStatus");
+            var logger = context.GetLogger("CheckOverallStatus");
             var previousStatus = tableInput[^1].PrepStatus;
 
             var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
             if (!(DateTime.Now > start && DateTime.Now < end))
             {
-                if (DateTime.Now.Hour == 11 && DateTime.Now.Minute == 50) // TODO: Change to 12 and 00
+                if (DateTime.Now.Hour == 12 && DateTime.Now.Minute == 00)
                 {
                     logger.LogInformation($"Daily off-season update at: {DateTime.Now}");
                 }
