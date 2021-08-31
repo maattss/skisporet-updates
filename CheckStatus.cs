@@ -21,10 +21,6 @@ namespace SkisporetUpdates
             var logger = context.GetLogger("CheckStatus");
             var previousStatus = tableInput[^1].PrepStatus;
 
-            var response = SendTrackUpdateMail();
-            var mailSentStatus = response.Result.StatusCode;
-            logger.LogInformation("Mail statuscode: " + mailSentStatus);
-
             var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
             if (!(DateTime.Now > start && DateTime.Now < end))
@@ -47,9 +43,9 @@ namespace SkisporetUpdates
             
             if (currentPrepStatus == 1 && previousStatus != 1)
             {
-                //var response = SendTrackUpdateMail();
-                //var mailSentStatus = response.Result.StatusCode;
-                //logger.LogInformation("Mail statuscode: " + mailSentStatus);
+                var response = SendTrackUpdateMail();
+                var mailSentStatus = response.Result.StatusCode;
+                logger.LogInformation("Mail statuscode: " + mailSentStatus);
                // TODO: Check foo wrong status code. If so, do not write to db
             }
 
