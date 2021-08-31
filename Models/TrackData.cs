@@ -2,7 +2,7 @@
 
 namespace SkisporetUpdates.Models
 {
-    class TrackData
+    public class TrackData
     {
         public int LineId { get; set; }
         public bool Skating { get; set; }

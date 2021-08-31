@@ -9,7 +9,6 @@ namespace SkisporetUpdates
             var host = new HostBuilder()
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();
-
             host.Run();
         }
     }

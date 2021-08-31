@@ -2,7 +2,7 @@
 
 namespace SkisporetUpdates.Models
 {
-    class DestinationData
+    public class DestinationData
     {
         public StatusImages StatusImages { get; set; }
         public List<Symbol> Symbols { get; set; }
