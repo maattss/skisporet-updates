@@ -75,7 +75,7 @@ namespace SkisporetUpdates.Helpers
             var end = new DateTime(2022, 05, 01);
             if (!(DateTime.Now > start && DateTime.Now < end))
             {
-                if (DateTime.Now.Hour == 12 && DateTime.Now.Minute == 00)
+                if ((DateTime.Now.Hour == 12 || DateTime.Now.Hour == 00) && DateTime.Now.Minute == 00)
                 {
                     logger.LogInformation($"Daily off-season update at: {DateTime.Now}");
                     return true;
