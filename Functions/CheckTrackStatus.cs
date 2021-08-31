@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -13,28 +12,14 @@ namespace SkisporetUpdates
     {
 
         [Function("CheckTrackStatus")]
-        [TableOutput("SkisporetStatus")]
+        [TableOutput("TrackStatus")]
         public static async Task<List<TrackStatus>> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer,
             FunctionContext context)
         {
             var logger = context.GetLogger("CheckTrackStatus");
 
-            var start = new DateTime(2021, 12, 01);
-            var end = new DateTime(2022, 05, 01);
-            if (!(DateTime.Now > start && DateTime.Now < end))
-            {
-                if (DateTime.Now.Hour == 12 && DateTime.Now.Minute == 00)
-                {
-                    logger.LogInformation($"Daily off-season update at: {DateTime.Now}");
-                }
-                else
-                {
-                    logger.LogInformation($"Season not started, returning...");
-                    return null;
-                }
-            }
+            if(!(FetchStatus.ShouldFetchNewData(logger))) return null;
 
-            logger.LogInformation("Fetching new ski track data...");
             var trackListResponse = await FetchStatus.FetchTrackDataListAsync();
             var trackStatusList = new List<TrackStatus>();
 
@@ -42,7 +27,7 @@ namespace SkisporetUpdates
             {
                 trackStatusList.Add(new TrackStatus()
                 {
-                    PartitionKey = "",
+                    PartitionKey = FetchStatus.LineIdToTrackName(track.Value.LineId),
                     RowKey = Guid.NewGuid().ToString(),
                     PrepStatus = ColorToPrepStatus(track.Value.Statuses[0].ColorName),
                 });
@@ -56,9 +41,14 @@ namespace SkisporetUpdates
             return hexColor switch
             {
                 "#7a7a7a" => 6,
-                // TODO: Add rest of colors here
+                "#000005" => 5,
+                "#0294ff" => 4,
+                "#000003" => 3,
+                "#000002" => 2,
+                "#000001" => 1,
                 _ => 2000,
             };
         }
+ 
     }
 }
