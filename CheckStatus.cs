@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -46,7 +47,9 @@ namespace SkisporetUpdates
                 var response = SendTrackUpdateMail();
                 var mailSentStatus = response.Result.StatusCode;
                 logger.LogInformation("Mail statuscode: " + mailSentStatus);
-               // TODO: Check foo wrong status code. If so, do not write to db
+
+                // Do not write to db if statuscode is wrong
+                if (mailSentStatus != HttpStatusCode.Accepted) return null;
             }
 
             return new TrackStatus()
@@ -111,7 +114,7 @@ namespace SkisporetUpdates
             var to = new EmailAddress("ma.tyldum@gmail.com", "Mats");
             var subject = "Skisporet oppdatering!";
             var plainTextContent = "Woho! Løypemaskinen er i gang. Sjekk status på skisporet.no";
-            var htmlContent = "<p>Woho! Løypemaskinen er i gang. Sjekk status på skisporet.no <a href=\"https://www.skisporet.no\">skisporet.no</a> </p>";
+            var htmlContent = "<p>Woho! Løypemaskinen er i gang. Sjekk status på <a href=\"https://skisporet.no/setView/58.6657916/7.0643317/15/norges_grunnkart\">skisporet.no</a></p>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
             return response;
