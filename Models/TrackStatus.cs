@@ -1,9 +1,7 @@
 ﻿namespace SkisporetUpdates.Models
 {
-    public class TrackStatus
+    public class OverallStatus : TrackStatus
     {
-        public string PartitionKey { get; set; }
-        public string RowKey { get; set; }
-        public int PrepStatus { get; set; }
+        public string MailStatus { get; set; }
     }
 }

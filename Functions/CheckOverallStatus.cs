@@ -27,22 +27,32 @@ namespace SkisporetUpdates
             var currentPrepStatus = destinationResponse.Data.Symbols[0].PrepStatus;
             logger.LogInformation("Current prep status: " + currentPrepStatus);
             logger.LogInformation("Previous prep status: " + previousStatus);
+            var mailStatus = "Not sent";
             
             if (currentPrepStatus == 1 && previousStatus != 1)
             {
+                logger.LogInformation("Sending mail...");
                 var response = Mail.SendTrackUpdateMail();
-                var mailSentStatus = response.Result.StatusCode;
-                logger.LogInformation("Mail statuscode: " + mailSentStatus);
+                mailStatus = response.Result.StatusCode.ToString();
 
-                // Do not write to db if statuscode is wrong
-                if (mailSentStatus != HttpStatusCode.Accepted) return null;
+                if (mailStatus == HttpStatusCode.Accepted.ToString() || mailStatus == HttpStatusCode.OK.ToString())
+                {
+                    logger.LogInformation("Mail succesfully sent!");
+                    mailStatus = "Sent, statuscode: " + response.Result.StatusCode.ToString();
+                }
+                else
+                {
+                    logger.LogInformation("Something seems ro be wrong... Mail statuscode: " + mailStatus);
+                    mailStatus = "Error, statuscode: " + response.Result.StatusCode.ToString();
+                }
             }
 
-            return new TrackStatus()
+            return new OverallStatus()
             {
                 PartitionKey = "DestinationKnaben",
                 RowKey = Guid.NewGuid().ToString(),
-                PrepStatus = currentPrepStatus
+                PrepStatus = currentPrepStatus,
+                MailStatus = mailStatus,
             };
         } 
     }
