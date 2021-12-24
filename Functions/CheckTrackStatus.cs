@@ -2,18 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 using SkisporetUpdates.Helpers;
 using SkisporetUpdates.Models;
 
-namespace SkisporetUpdates
+namespace SkisporetUpdates.Functions
 {
     public static class CheckTrackStatus
     {
 
         [Function("CheckTrackStatus")]
         [TableOutput("TrackStatus")]
-        public static async Task<List<TrackStatus>> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer,
+        public static async Task<List<TrackStatus>> RunAsync([TimerTrigger("*/5 * * * * *")] TimerInfo timer,
             FunctionContext context)
         {
             var logger = context.GetLogger("CheckTrackStatus");

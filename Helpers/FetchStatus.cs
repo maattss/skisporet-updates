@@ -7,7 +7,7 @@ using System;
 
 namespace SkisporetUpdates.Helpers
 {
-    public class FetchStatus
+    public static class FetchStatus
     {
         private static async Task<IRestResponse<List<TrackData>>> FetchTrackDataAsync(string body)
         {
@@ -50,7 +50,7 @@ namespace SkisporetUpdates.Helpers
             RestRequest request = new(Method.POST);
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             request.AddHeader("X-Requested-With", "XMLHttpRequest");
-            string body = @"ids=%5B486%5D";
+            const string body = @"ids=%5B486%5D";
             request.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", body, ParameterType.RequestBody);
             return await client.ExecuteAsync<DestinationData>(request);
         }
@@ -77,13 +77,13 @@ namespace SkisporetUpdates.Helpers
             {
                 if ((DateTime.Now.Hour == 12 || DateTime.Now.Hour == 00) && DateTime.Now.Minute == 00)
                 {
-                    logger.LogInformation($"Daily off-season update at: {DateTime.Now}");
+                    logger.LogInformation("Daily off-season update at: {Timestamp}", DateTime.Now);
                     return true;
                 }
-                logger.LogInformation($"Season not started yet, no need for fetching new data...");
+                logger.LogInformation("Season not started yet, no need for fetching new data...");
                 return false;
             }
-            logger.LogInformation($"It's ski season! Fetching new data...");
+            logger.LogInformation("It's ski season! Fetching new data...");
             return true;
         }
 
