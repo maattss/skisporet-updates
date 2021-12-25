@@ -31,7 +31,7 @@ namespace SkisporetUpdates.Functions
 
         [Function("CheckTrackStatus")]
         [TableOutput("TrackStatus")]
-        public static async Task<List<TrackStatus>> RunAsync([TimerTrigger("*/30 * * * * *")] TimerInfo timer,
+        public static async Task<List<TrackStatus>> RunAsync([TimerTrigger("* */24 * * * *")] TimerInfo timer,
             FunctionContext context)
         {
             var logger = context.GetLogger("CheckTrackStatus");

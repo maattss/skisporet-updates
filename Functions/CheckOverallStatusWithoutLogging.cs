@@ -11,7 +11,7 @@ namespace SkisporetUpdates.Functions
 {
     public class CheckOverallStatusWithoutLogging
     {
-        [Function("CheckOverallStatus")]
+        [Function("CheckOverallStatusWithoutLogging")]
         [TableOutput("OverallStatus")]
         public static async Task<TrackStatus> RunAsync([TimerTrigger("*/5 * * * * *")] TimerInfo timer,
             [TableInput("OverallStatus", "DestinationKnaben")] IEnumerable<TrackStatus> tableInput,

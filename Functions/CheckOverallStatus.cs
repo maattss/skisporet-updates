@@ -14,7 +14,7 @@ namespace SkisporetUpdates.Functions
     {
         [Function("CheckOverallStatus")]
         [TableOutput("OverallStatus")]
-        public static async Task<TrackStatus> RunAsync([TimerTrigger("*/10 * * * * *")] TimerInfo timer,
+        public static async Task<TrackStatus> RunAsync([TimerTrigger("* */24 * * * *")] TimerInfo timer,
             [TableInput("OverallStatus", "DestinationKnaben")] List<TrackStatus> tableInput,
             FunctionContext context)
         {
