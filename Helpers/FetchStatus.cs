@@ -55,21 +55,7 @@ namespace SkisporetUpdates.Helpers
             return await client.ExecuteAsync<DestinationData>(request);
         }
 
-        public static string LineIdToTrackName(int lineId)
-        {
-            return lineId switch
-            {
-                24046 => "Sanden",
-                39808 => "Husmorloypa",
-                24039 => "Ornehommen",
-                39801 => "Knaben1",
-                49990 => "Knaberoisa",
-                45635 => "Kvinavegen",
-                _ => "UkjentId",
-            };
-        }
-
-        public static bool ShouldFetchNewData(ILogger logger)
+        public static bool ShouldFetchNewData(ILogger logger = null)
         {
             var start = new DateTime(2021, 12, 01);
             var end = new DateTime(2022, 05, 01);
@@ -77,16 +63,21 @@ namespace SkisporetUpdates.Helpers
             {
                 if ((DateTime.Now.Hour == 12 || DateTime.Now.Hour == 00) && DateTime.Now.Minute == 00)
                 {
-                    logger.LogInformation("Daily off-season update at: {Timestamp}", DateTime.Now);
+                    WriteInfoLog($"Daily off-season update at: {DateTime.Now}");
                     return true;
                 }
-                logger.LogInformation("Season not started yet, no need for fetching new data...");
+                WriteInfoLog("Season not started yet, no need for fetching new data...");
                 return false;
             }
-            logger.LogInformation("It's ski season! Fetching new data...");
+            WriteInfoLog("It's ski season! Fetching new data...");
             return true;
         }
 
-        
+        private static void WriteInfoLog(string logStatement, ILogger logger = null)
+        {
+            if (logger is null || logStatement is null) return;
+            
+            logger.LogInformation(logStatement);
+        }
     }
 }
